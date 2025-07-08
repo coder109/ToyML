@@ -1,7 +1,6 @@
 *.cmake
 CMakeFiles
 CMakeCache.txt
-CMakeLists.txt
 Makefile
 *.exe
 .vscode
