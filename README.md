@@ -1,6 +1,6 @@
 # ToyML
 
-**ToyML** is a lightweight machine learning library built for educational purposes and fun.
+**ToyML** is a lightweight machine learning library built for educational purposes and fun implemented in C only.
 
 ⚠️ **Note:** This is not a production-ready library. Use it for learning and experimentation only.
 
