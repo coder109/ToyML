@@ -1,0 +1,7 @@
+#ifndef ERROR_CODE_H_
+#define ERROR_CODE_H_
+
+#define EXIT_MALLOC_FAILURE -300
+#define EXIT_OP_SHAPE_FAILURE -299
+
+#endif
