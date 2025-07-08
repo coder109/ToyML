@@ -19,8 +19,11 @@ Tensor* CreateZeroTensor(int n_dim, int* shape_elem);
 
 Tensor* CreateOneTensor(int n_dim, int* shape_elem);
 
+Tensor* CreateBaseOnArray(int n_dim, int* shape_elem, double* data);
+
 void FreeTensor(Tensor* tensor);
 
+// Basic Operation
 Tensor* AddTensor(Tensor* tensor1, Tensor* tensor2);
 
 bool AddTensorInPlace(Tensor* tensor1, Tensor* tensor2);
@@ -28,6 +31,13 @@ bool AddTensorInPlace(Tensor* tensor1, Tensor* tensor2);
 Tensor* SubTensor(Tensor* tensor1, Tensor* tensor2);
 
 bool SubTensorInPlace(Tensor* tensor1, Tensor* tensor2);
+
+// Matrix Operation
+bool isMatrix(Tensor* tensor);
+
+Tensor* MatMul(Tensor* tensor1, Tensor* tensor2);
+
+Tensor* Transpose(Tensor* tensor);
 
 // Utils
 int GetDataNum(Tensor* tensor);

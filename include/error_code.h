@@ -3,5 +3,6 @@
 
 #define EXIT_MALLOC_FAILURE -300
 #define EXIT_OP_SHAPE_FAILURE -299
+#define EXIT_NOT_MAT_FAILURE -298
 
 #endif

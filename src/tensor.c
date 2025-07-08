@@ -41,6 +41,15 @@ Tensor* CreateOneTensor(int n_dim, int* shape_elem) {
     return tensor;
 }
 
+Tensor* CreateBaseOnArray(int n_dim, int* shape_elem, double* data) {
+    Tensor* tensor = CreateZeroTensor(n_dim, shape_elem);
+    int data_num = GetDataNum(tensor);
+    for(int i = 0; i < data_num; i++) {
+        tensor->data[i] = data[i];
+    }
+    return tensor;
+}
+
 Tensor* AddTensor(Tensor* tensor1, Tensor* tensor2) {
     if(!IsSameShape(tensor1, tensor2)) {
         perror("Tensor shape not same");
@@ -85,6 +94,43 @@ bool SubTensorInPlace(Tensor* tensor1, Tensor* tensor2) {
     for(int i = 0; i < data_num; i++) {
         tensor1->data[i] -= tensor2->data[i];
     }
+}
+
+bool isMatrix(Tensor* tensor) {
+    return tensor->n_dim == 2;
+}
+
+Tensor* MatMul(Tensor* tensor1, Tensor* tensor2) {
+    if(!isMatrix(tensor1) || !isMatrix(tensor2)) {
+        perror("Tensor is not matrix");
+        exit(EXIT_NOT_MAT_FAILURE);
+    }
+
+    Tensor* result = CreateZeroTensor(2, (int[]){tensor1->shape[0], tensor2->shape[1]});
+
+    for(int i = 0; i < tensor1->shape[0]; i++) {
+        for(int j = 0; j < tensor2->shape[1]; j++) {
+            for(int k = 0; k < tensor1->shape[1]; k++) {
+                result->data[i * result->shape[1] + j] += tensor1->data[i * tensor1->shape[1] + k] * tensor2->data[k * tensor2->shape[1] + j];
+            }
+        }
+    }
+    return result;
+}
+
+Tensor* Transpose(Tensor* tensor) {
+    if(!isMatrix(tensor)) {
+        perror("Tensor is not matrix");
+        exit(EXIT_NOT_MAT_FAILURE);
+    }
+    Tensor* result = CreateZeroTensor(2, (int[]){tensor->shape[1], tensor->shape[0]});
+
+    for(int i = 0; i < tensor->shape[0]; i++) {
+        for(int j = 0; j < tensor->shape[1]; j++) {
+            result->data[j * result->shape[1] + i] = tensor->data[i * tensor->shape[1] + j];
+        }
+    }
+    return result;
 }
 
 int GetDataNum(Tensor* tensor) {

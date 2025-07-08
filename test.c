@@ -1,19 +1,10 @@
 #include "include/tensor.h"
 
 int main(int argc, char* argv[]) {
-    Tensor* tensor1 = CreateZeroTensor(2, (int[]){2, 3});
-    Tensor* tensor2 = CreateOneTensor(2, (int[]){2, 3});
-    Tensor* bad_te1 = CreateZeroTensor(3, (int[]){2, 3, 4});
+    Tensor* tensor = CreateBaseOnArray(2, (int[]){2, 3}, (double[]){1, 2, 3, 4, 5, 6});
 
-    PrintTensor(tensor1);
-    PrintTensor(tensor2);
-    PrintTensor(bad_te1);
+    PrintTensor(Transpose(tensor));
 
-    AddTensorInPlace(tensor1, tensor2);
-    SubTensorInPlace(tensor1, tensor2);
-
-    FreeTensor(tensor1);
-    FreeTensor(tensor2);
-    FreeTensor(bad_te1);
+    FreeTensor(tensor);
     return 0;
 }
