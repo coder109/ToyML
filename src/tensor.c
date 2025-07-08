@@ -50,6 +50,29 @@ Tensor* CreateBaseOnArray(int n_dim, int* shape_elem, double* data) {
     return tensor;
 }
 
+bool ChangeShape(Tensor* tensor, int n_dim, int* shape_elem) {
+    int new_data_num = 1;
+    for(int i = 0; i < n_dim; i++) {
+        new_data_num *= shape_elem[i];
+    }
+    if(new_data_num != GetDataNum(tensor)) {
+        printf("Unable to change shape\n");
+        return false;
+    }
+    tensor->n_dim = n_dim;
+    free(tensor->shape);
+    tensor->shape = (int*)malloc(sizeof(int) * n_dim);
+    if(tensor->shape == NULL) {
+        perror("Shape malloc");
+        exit(EXIT_MALLOC_FAILURE);
+    }
+
+    for(int i = 0; i < n_dim; i++) {
+        tensor->shape[i] = shape_elem[i];
+    }
+    return true;
+}
+
 Tensor* AddTensor(Tensor* tensor1, Tensor* tensor2) {
     if(!IsSameShape(tensor1, tensor2)) {
         perror("Tensor shape not same");

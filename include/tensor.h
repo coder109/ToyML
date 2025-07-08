@@ -23,7 +23,10 @@ Tensor* CreateBaseOnArray(int n_dim, int* shape_elem, double* data);
 
 void FreeTensor(Tensor* tensor);
 
-// Basic Operation
+// Shape Operation
+bool ChangeShape(Tensor* tensor, int n_dim, int* shape_elem);
+
+// Basic Operation on Calculation
 Tensor* AddTensor(Tensor* tensor1, Tensor* tensor2);
 
 bool AddTensorInPlace(Tensor* tensor1, Tensor* tensor2);
