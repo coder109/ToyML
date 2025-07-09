@@ -151,6 +151,16 @@ Tensor* MatMul(Tensor* tensor1, Tensor* tensor2) {
             }
         }
     }
+
+    result->n_prev = 2;
+    result->prev = (Tensor**)malloc(sizeof(Tensor*) * 2);
+    if(result->prev == NULL) {
+        perror("Prev malloc");
+        exit(EXIT_MALLOC_FAILURE);
+    }
+    result->prev[0] = tensor1;
+    result->prev[1] = tensor2;
+    result->fn_id = OP_MATMUL;
     return result;
 }
 
