@@ -6,12 +6,19 @@
 #include <stdbool.h>
 #include <stdarg.h>
 
-#include "error_code.h"
+#include "macro_code.h"
 
-typedef struct {
+typedef struct Tensor {
+    // Data
     double* data;
     int* shape;
     int n_dim;
+
+    // Backprop
+    double* grad;
+    int n_prev;
+    struct Tensor** prev;
+    int fn_id;
 } Tensor;
 
 // Creation and Free

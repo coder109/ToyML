@@ -13,6 +13,10 @@ The core data structure in ToyML is the **Tensor**, which is implemented as a fl
 
 For instance, the tensor `[1, 2, 3, 4, 5, 6]` can be interpreted as a 2\*3 matrix or a 2\*1\*3 tensor.
 
+## Backpropagation
+
+In ToyML, backpropagation refers only to the process that computes the gradients, not how the gradients are used.
+
 ## TODO
 
 - [ ] Backpropagation

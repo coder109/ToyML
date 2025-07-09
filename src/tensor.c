@@ -25,9 +25,17 @@ Tensor* CreateZeroTensor(int n_dim, int* shape_elem) {
         exit(EXIT_MALLOC_FAILURE);
     }
 
+    double* grad = (double*)calloc(data_num, sizeof(double));
+    if(grad == NULL) {
+        perror("Grad malloc");
+        exit(EXIT_MALLOC_FAILURE);
+    }
+
     tensor->data = data;
+    tensor->grad = grad;
     tensor->n_dim = n_dim;
     tensor->shape = shape;
+    tensor->fn_id = OP_UNDEFINED;
     return tensor;
 }
 
@@ -129,6 +137,11 @@ Tensor* MatMul(Tensor* tensor1, Tensor* tensor2) {
         exit(EXIT_NOT_MAT_FAILURE);
     }
 
+    if(tensor1->shape[1] != tensor2->shape[0]) {
+        perror("Matrix shape not match");
+        exit(EXIT_OP_SHAPE_FAILURE);
+    }
+
     Tensor* result = CreateZeroTensor(2, (int[]){tensor1->shape[0], tensor2->shape[1]});
 
     for(int i = 0; i < tensor1->shape[0]; i++) {
@@ -180,7 +193,12 @@ void PrintTensor(Tensor* tensor) {
     for(int i = 0; i < data_num; i++) {
         printf("%lf ", tensor->data[i]);
     }
-    printf("\n");
+    printf("\nGrad:\n");
+    for(int i = 0; i < data_num; i++) {
+        printf("%lf ", tensor->grad[i]);
+    }
+    printf("\nPrev Node Num:%d", tensor->n_prev);
+    printf("\nOP ID:%d\n", tensor->fn_id);
 }
 
 bool IsSameShape(Tensor* tensor1, Tensor* tensor2) {
