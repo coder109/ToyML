@@ -58,8 +58,8 @@ void MatmulBackprop(Tensor* tensor) {
 }
 
 void MSEBackprop(Tensor* loss) {
-    for(int i = 0; i < GetDataNum(loss); i++) {
+    for(int i = 0; i < GetDataNum(loss->prev[0]); i++) {
         double diff = loss->prev[0]->data[i] - loss->prev[1]->data[i];
-        loss->prev[0]->grad[i] = diff * 2;
+        loss->prev[0]->grad[i] = diff * 2 / GetDataNum(loss->prev[0]);
     }
 }

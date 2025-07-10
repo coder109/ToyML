@@ -1,11 +1,11 @@
 #include "loss_fn.h"
 
 Tensor* MSE(Tensor* ground_truth, Tensor* prediction) {
-    Tensor* loss = CreateZeroTensor(prediction->n_dim, prediction->shape);
+    Tensor* loss = CreateZeroTensor(1, (int[]){1});
     int data_num = GetDataNum(prediction);
 
     for(int i = 0; i < data_num; i++) {
-        loss->data[i] = (prediction->data[i] - ground_truth->data[i]) * (prediction->data[i] - ground_truth->data[i]);
+        loss->data[0] += pow(prediction->data[i] - ground_truth->data[i], 2);
     }
 
     loss->n_prev = 2;

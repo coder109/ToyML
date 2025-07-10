@@ -5,3 +5,5 @@ Makefile
 *.exe
 .vscode
 build
+
+*.py

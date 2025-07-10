@@ -11,8 +11,8 @@ int main(int argc, char* argv[]) {
     Tensor* gt_tensor = CreateBaseOnArray(2, (int[]){6, 1}, (double[]){6, 12, 18, 24, 30, 36});
 
 
-    double lr = 0.00001;
-    for(int iter = 0; iter < 1000; ++iter) {
+    double lr = 0.1;
+    for(int iter = 0; iter < 100; ++iter) {
         Tensor* out_tensor = MatMul(in_tensor, layer);
         Tensor* loss = MSE(gt_tensor, out_tensor);
 
@@ -25,10 +25,11 @@ int main(int argc, char* argv[]) {
             }
         }
 
+        printf("Grad of layer: %lf\n", layer->grad[0]);
+
+        free(loss);
         free(out_tensor);
     }
-
-    PrintTensor(layer);
 
     FreeTensor(in_tensor);
     FreeTensor(layer);
