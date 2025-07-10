@@ -14,5 +14,7 @@
 #define OP_SOFTMAX 102
 #define OP_MSE 103
 #define OP_MATMUL 104
+#define OP_ADD 105
+#define OP_SUB 106
 
 #endif

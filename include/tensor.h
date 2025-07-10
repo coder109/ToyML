@@ -54,6 +54,8 @@ int GetDataNum(Tensor* tensor);
 
 void PrintTensor(Tensor* tensor);
 
+int GetElemIdxBasedOnRowCol(Tensor* tensor, int row, int col);
+
 bool IsSameShape(Tensor* tensor1, Tensor* tensor2);
 
 #endif

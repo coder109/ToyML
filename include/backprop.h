@@ -11,6 +11,6 @@ void SigmoidBackprop(Tensor* tensor);
 
 void MatmulBackprop(Tensor* tensor);
 
-void MSEBackprop(Tensor* ground_truth, Tensor* prediction);
+void MSEBackprop(Tensor* tensor);
 
 #endif

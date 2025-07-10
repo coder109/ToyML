@@ -5,6 +5,6 @@ include_directories(include)
 
 file(GLOB SOURCES "src/*.c" "test.c")
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+link_libraries(m)
 
-target_link_libraries(${PROJECT_NAME} m)
+add_executable(${PROJECT_NAME} ${SOURCES})

@@ -91,6 +91,16 @@ Tensor* AddTensor(Tensor* tensor1, Tensor* tensor2) {
     for(int i = 0; i < data_num; i++) {
         result->data[i] = tensor1->data[i] + tensor2->data[i];
     }
+
+    result->n_prev = 2;
+    result->prev = (Tensor**)malloc(sizeof(Tensor*) * 2);
+    if(result->prev == NULL) {
+        perror("Prev malloc");
+        exit(EXIT_MALLOC_FAILURE);
+    }
+    result->prev[0] = tensor1;
+    result->prev[1] = tensor2;
+    result->fn_id = OP_ADD;
 }
 
 bool AddTensorInPlace(Tensor* tensor1, Tensor* tensor2) {
@@ -114,6 +124,16 @@ Tensor* SubTensor(Tensor* tensor1, Tensor* tensor2) {
     for(int i = 0; i < data_num; i++) {
         result->data[i] = tensor1->data[i] - tensor2->data[i];
     }
+
+    result->n_prev = 2;
+    result->prev = (Tensor**)malloc(sizeof(Tensor*) * 2);
+    if(result->prev == NULL) {
+        perror("Prev malloc");
+        exit(EXIT_MALLOC_FAILURE);
+    }
+    result->prev[0] = tensor1;
+    result->prev[1] = tensor2;
+    result->fn_id = OP_ADD;
 }
 
 bool SubTensorInPlace(Tensor* tensor1, Tensor* tensor2) {
@@ -210,6 +230,11 @@ void PrintTensor(Tensor* tensor) {
     printf("\nPrev Node Num:%d", tensor->n_prev);
     printf("\nOP ID:%d\n", tensor->fn_id);
 }
+
+int GetElemIdxBasedOnRowCol(Tensor* tensor, int row, int col) {
+    return row * tensor->shape[1] + col;    
+}
+
 
 bool IsSameShape(Tensor* tensor1, Tensor* tensor2) {
     if(tensor1->n_dim != tensor2->n_dim) {

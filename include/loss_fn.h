@@ -5,6 +5,6 @@
 
 #include <math.h>
 
-double MSE(Tensor* ground_truth, Tensor* prediction);
+Tensor* MSE(Tensor* ground_truth, Tensor* prediction);
 
 #endif
