@@ -22,6 +22,8 @@ int main(int argc, char* argv[]) {
         for(int i = 0; i < layer->shape[0]; i++) {
             for(int j = 0; j < layer->shape[1]; j++) {
                 layer->data[GetElemIdxBasedOnRowCol(layer, i, j)] -= lr * layer->grad[GetElemIdxBasedOnRowCol(layer, i, j)];
+
+                lr /= 2.;
             }
         }
 
