@@ -2,6 +2,8 @@
 
 **ToyML** is a lightweight machine learning library built for educational purposes and fun implemented in C only.
 
+ToyML draws inspiration from PyTorch's design philosophy and tensor operations. To ensure correctness, all test cases are validated against PyTorch's reference implementations.
+
 ⚠️ **Note:** This is not a production-ready library. Use it for learning and experimentation only.
 
 ## Tensor
