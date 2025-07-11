@@ -10,11 +10,22 @@ ToyML draws inspiration from PyTorch's design philosophy and tensor operations. 
 
 ## How to use?
 
-Use the following command to build:
+On Windows, use the following command to build:
 
 ```bash
-cmake --build .
-./ToyML.exe
+mkdir build
+cd build
+cmake .. -G “MinGW Makefiles”
+make
+```
+
+On Linux:
+
+```bash
+mkdir build
+cd build
+cmake ..
+make
 ```
 
 A simple example is presented below:

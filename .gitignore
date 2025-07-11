@@ -2,8 +2,13 @@
 CMakeFiles
 CMakeCache.txt
 Makefile
+
 *.exe
+
 .vscode
+
 build
 
 *.py
+
+*.txt
