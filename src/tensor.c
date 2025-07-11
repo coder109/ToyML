@@ -58,6 +58,15 @@ Tensor* CreateBaseOnArray(int n_dim, int* shape_elem, double* data) {
     return tensor;
 }
 
+Tensor* CreateRandom(int n_dim, int* shape_elem) {
+    Tensor* tensor = CreateZeroTensor(n_dim, shape_elem);
+    int data_num = GetDataNum(tensor);
+    for(int i = 0; i < data_num; i++) {
+        tensor->data[i] = (double)rand() / (double)RAND_MAX;
+    }
+    return tensor;
+}
+
 bool ChangeShape(Tensor* tensor, int n_dim, int* shape_elem) {
     int new_data_num = 1;
     for(int i = 0; i < n_dim; i++) {

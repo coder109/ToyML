@@ -28,6 +28,8 @@ Tensor* CreateOneTensor(int n_dim, int* shape_elem);
 
 Tensor* CreateBaseOnArray(int n_dim, int* shape_elem, double* data);
 
+Tensor* CreateRandom(int n_dim, int* shape_elem);
+
 void FreeTensor(Tensor* tensor);
 
 // Shape Operation
