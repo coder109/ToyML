@@ -19,4 +19,8 @@ void SubBackprop(Tensor* tensor);
 
 void HadamardProductBackprop(Tensor* tensor);
 
+void ReLUBackprop(Tensor* tensor);
+
+void SoftmaxBackprop(Tensor* tensor);
+
 #endif

@@ -23,5 +23,6 @@
 #define OP_ADD 105
 #define OP_SUB 106
 #define OP_HADAMARD 107
+#define OP_RELU 108
 
 #endif

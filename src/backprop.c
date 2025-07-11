@@ -96,3 +96,9 @@ void HadamardProductBackprop(Tensor* tensor) {
         tensor->prev[1]->grad[i] = tensor->grad[i] * tensor->prev[0]->data[i];
     }
 }
+
+void ReLUBackprop(Tensor* tensor) {
+    for(int i = 0; i < GetDataNum(tensor); i++) {
+        tensor->prev[0]->grad[i] = tensor->grad[i] * (tensor->prev[0]->data[i] > 0 ? 1 : 0);
+    }
+}

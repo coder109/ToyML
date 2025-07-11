@@ -10,4 +10,6 @@ Tensor* Sigmoid(Tensor* tensor);
 
 Tensor* Softmax(Tensor* tensor);
 
+Tensor* ReLU(Tensor* tensor);
+
 #endif

@@ -41,3 +41,22 @@ Tensor* Softmax(Tensor* tensor) {
     result->prev[0] = tensor;
     return result;
 }
+
+Tensor* ReLU(Tensor* tensor) {
+    Tensor* result = CreateZeroTensor(tensor->n_dim, tensor->shape);
+    int data_num = GetDataNum(tensor);
+
+    for(int i = 0; i < data_num; i++) {
+        result->data[i] = tensor->data[i] > 0.0 ? tensor->data[i] : 0.0;
+    }
+
+    result->fn_id = OP_RELU;
+    result->n_prev = 1;
+    result->prev = (Tensor**)malloc(sizeof(Tensor*));
+    if(result->prev == NULL) {
+        perror("Prev malloc");
+        exit(EXIT_MALLOC_FAILURE);
+    }
+    result->prev[0] = tensor;
+    return result;
+}
