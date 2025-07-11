@@ -38,7 +38,7 @@ void MatmulBackprop(Tensor* tensor) {
                 double curr_elem = tensor->prev[1]->data[GetElemIdxBasedOnRowCol(tensor->prev[1], elem_col, col)];
                 grad_sum += tensor_grad * curr_elem;
             }
-            tensor->prev[0]->grad[GetElemIdxBasedOnRowCol(tensor->prev[0], elem_row, elem_col)] += grad_sum;
+            tensor->prev[0]->grad[GetElemIdxBasedOnRowCol(tensor->prev[0], elem_row, elem_col)] = grad_sum;
         }
     }
 
@@ -51,7 +51,7 @@ void MatmulBackprop(Tensor* tensor) {
                 double curr_elem = tensor->prev[0]->data[GetElemIdxBasedOnRowCol(tensor->prev[0], row, elem_row)];
                 grad_sum += tensor_grad * curr_elem;
             }
-            tensor->prev[1]->grad[GetElemIdxBasedOnRowCol(tensor->prev[1], elem_row, elem_col)] += grad_sum;
+            tensor->prev[1]->grad[GetElemIdxBasedOnRowCol(tensor->prev[1], elem_row, elem_col)] = grad_sum;
         }
     }
 

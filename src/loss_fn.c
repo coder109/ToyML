@@ -8,6 +8,8 @@ Tensor* MSE(Tensor* ground_truth, Tensor* prediction) {
         loss->data[0] += pow(prediction->data[i] - ground_truth->data[i], 2);
     }
 
+    loss->data[0] /= data_num;
+
     loss->n_prev = 2;
     loss->prev = (Tensor**)malloc(sizeof(Tensor*) * 2);
     if(loss->prev == NULL) {
