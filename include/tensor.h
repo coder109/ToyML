@@ -42,6 +42,8 @@ Tensor* SubTensor(Tensor* tensor1, Tensor* tensor2);
 
 bool SubTensorInPlace(Tensor* tensor1, Tensor* tensor2);
 
+Tensor* HadamardProduct(Tensor* tensor1, Tensor* tensor2);
+
 // Matrix Operation
 bool isMatrix(Tensor* tensor);
 

@@ -1,6 +1,6 @@
 #include "backprop.h"
 
-void Backprop(Tensor* tensor) {
+int Backprop(Tensor* tensor) {
     // BackProp based on the fn_id.
     switch(tensor->fn_id) {
         case OP_SIGMOID:
@@ -12,18 +12,30 @@ void Backprop(Tensor* tensor) {
         case OP_MSE:
             MSEBackprop(tensor);
             break;
-        default:
+        case OP_ADD:
+            AddBackprop(tensor);
             break;
+        case OP_SUB:
+            SubBackprop(tensor);
+            break;
+        case OP_HADAMARD:
+            HadamardProductBackprop(tensor);
+            break;
+        case OP_UNDEFINED:
+            break;
+        default:
+            printf("WARNING: Backprop not implemented for OP ID %d\n", tensor->fn_id);
+            return WARN_UNIMPLEMENTED;
     }
-    // Recursively backprop to the previous tensors.
     for(int i = 0; i < tensor->n_prev; i++) {
         Backprop(tensor->prev[i]);
     }
+    return SUCCESS;
 }
 
 void SigmoidBackprop(Tensor* tensor) {
     for(int i = 0; i < GetDataNum(tensor); i++) {
-        tensor->prev[0]->grad[i] += tensor->grad[i] * tensor->data[i] * (1 - tensor->data[i]);
+        tensor->prev[0]->grad[i] = tensor->grad[i] * tensor->data[i] * (1 - tensor->data[i]);
     }
 }
 
@@ -61,5 +73,26 @@ void MSEBackprop(Tensor* loss) {
     for(int i = 0; i < GetDataNum(loss->prev[0]); i++) {
         double diff = loss->prev[0]->data[i] - loss->prev[1]->data[i];
         loss->prev[0]->grad[i] = diff * 2 / GetDataNum(loss->prev[0]);
+    }
+}
+
+void AddBackprop(Tensor* tensor) {
+    for(int i = 0; i < GetDataNum(tensor); i++) {
+        tensor->prev[0]->grad[i] = tensor->grad[i];
+        tensor->prev[1]->grad[i] = tensor->grad[i];
+    }
+}
+
+void SubBackprop(Tensor* tensor) {
+    for(int i = 0; i < GetDataNum(tensor); i++) {
+        tensor->prev[0]->grad[i] = tensor->grad[i];
+        tensor->prev[1]->grad[i] = -tensor->grad[i];
+    }
+}
+
+void HadamardProductBackprop(Tensor* tensor) {
+    for(int i = 0; i < GetDataNum(tensor); i++) {
+        tensor->prev[0]->grad[i] = tensor->grad[i] * tensor->prev[1]->data[i];
+        tensor->prev[1]->grad[i] = tensor->grad[i] * tensor->prev[0]->data[i];
     }
 }

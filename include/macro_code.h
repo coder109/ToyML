@@ -9,7 +9,10 @@
 
 // WARNING Code
 #define WARN_NAN -200
+#define WARN_UNIMPLEMENTED -199
 
+// State Code
+#define SUCCESS 0
 
 // Function Index
 #define OP_UNDEFINED 100
@@ -19,5 +22,6 @@
 #define OP_MATMUL 104
 #define OP_ADD 105
 #define OP_SUB 106
+#define OP_HADAMARD 107
 
 #endif

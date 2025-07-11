@@ -147,6 +147,28 @@ bool SubTensorInPlace(Tensor* tensor1, Tensor* tensor2) {
     }
 }
 
+Tensor* HadamardProduct(Tensor* tensor1, Tensor* tensor2) {
+    if(!IsSameShape(tensor1, tensor2)) {
+        perror("Tensor shape not same");
+        exit(EXIT_OP_SHAPE_FAILURE);
+    }
+    Tensor* result = CreateZeroTensor(tensor1->n_dim, tensor1->shape);
+    int data_num = GetDataNum(result);
+    for(int i = 0; i < data_num; i++) {
+        result->data[i] = tensor1->data[i] * tensor2->data[i];
+    }
+
+    result->n_prev = 2;
+    result->prev = (Tensor**)malloc(sizeof(Tensor*) * 2);
+    if(result->prev == NULL) {
+        perror("Prev malloc");
+        exit(EXIT_MALLOC_FAILURE);
+    }
+    result->prev[0] = tensor1;
+    result->prev[1] = tensor2;
+    result->fn_id = OP_HADAMARD;
+}
+
 bool isMatrix(Tensor* tensor) {
     return tensor->n_dim == 2;
 }
