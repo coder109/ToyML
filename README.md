@@ -1,12 +1,21 @@
 # ToyML
 
-**ToyML** is a lightweight machine learning library built for educational purposes and fun implemented in C only.
+**ToyML** is a lightweight machine learning library built for educational purposes and fun implemented in C only. 
+
+ToyML maintains minimal dependencies by exclusively using standard C library headers. This intentional design choice keeps the implementation lightweight, easy to build and focused on core ML concepts.
 
 ToyML draws inspiration from PyTorch's design philosophy and tensor operations. To ensure correctness, all test cases are validated against PyTorch's reference implementations.
 
 ⚠️ **Note:** This is not a production-ready library. Use it for learning and experimentation only.
 
 ## How to use?
+
+Use the following command to build:
+
+```bash
+cmake --build .
+./ToyML.exe
+```
 
 A simple example is presented below:
 
