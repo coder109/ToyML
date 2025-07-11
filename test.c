@@ -2,6 +2,7 @@
 #include "include/active_fn.h"
 #include "include/backprop.h"
 #include "include/loss_fn.h"
+#include "include/optimize.h"
 
 int main(int argc, char* argv[]) {
     Tensor* in_tensor = CreateBaseOnArray(2, (int[]){6, 1}, (double[]){1, 2, 3, 4, 5, 6});
@@ -18,17 +19,16 @@ int main(int argc, char* argv[]) {
 
         Backprop(loss);
 
-        // Update Layer
-        for(int i = 0; i < layer->shape[0]; i++) {
-            for(int j = 0; j < layer->shape[1]; j++) {
-                layer->data[GetElemIdxBasedOnRowCol(layer, i, j)] -= lr * layer->grad[GetElemIdxBasedOnRowCol(layer, i, j)];
-            }
-        }
+        SGDOptimize(layer, lr);
 
         printf("%lf\n", layer->grad[0]);
+
+        ZeroGradTensor(layer);
+        
         free(loss);
         free(out_tensor);
     }
+    
     PrintTensor(layer);
     FreeTensor(in_tensor);
     FreeTensor(layer);

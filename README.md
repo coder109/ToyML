@@ -22,7 +22,7 @@ In ToyML, backpropagation refers only to the process that computes the gradients
 ## TODO
 
 - [x] Backpropagation
-- [ ] Optimizer
+- [x] Optimizer
 - [ ] Built-in Networks
 - [ ] Tokenizers
 

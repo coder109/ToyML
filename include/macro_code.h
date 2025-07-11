@@ -7,6 +7,9 @@
 #define EXIT_NOT_MAT_FAILURE -298
 #define EXIT_OP_ID_FAILURE -297
 
+// WARNING Code
+#define WARN_NAN -200
+
 
 // Function Index
 #define OP_UNDEFINED 100
