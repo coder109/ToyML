@@ -6,7 +6,59 @@ ToyML draws inspiration from PyTorch's design philosophy and tensor operations. 
 
 ⚠️ **Note:** This is not a production-ready library. Use it for learning and experimentation only.
 
-## Tensor
+## How to use?
+
+A simple example is presented below:
+
+```C
+#include "include/tensor.h"
+#include "include/active_fn.h"
+#include "include/backprop.h"
+#include "include/loss_fn.h"
+#include "include/optimize.h"
+
+int main(int argc, char* argv[]) {
+    Tensor* in_tensor = CreateBaseOnArray(2, (int[]){6, 1}, (double[]){1, 2, 3, 4, 5, 6});
+
+    Tensor* layer = CreateBaseOnArray(2, (int[]){1, 1}, (double[]){1});
+
+    Tensor* gt_tensor = CreateBaseOnArray(2, (int[]){6, 1}, (double[]){6, 12, 18, 24, 30, 36});
+
+
+    double lr = 0.001;
+    for(int iter = 0; iter < 200; ++iter) {
+        // Forward Process
+        Tensor* out_tensor = MatMul(in_tensor, layer);
+        Tensor* loss = MSE(gt_tensor, out_tensor);
+
+        // Calculate the gradients
+        Backprop(loss);
+
+        // Optimize the parameters
+        SGDOptimize(layer, lr);
+
+        // Clear the previous gradients.
+        ZeroGradTensor(layer);
+        
+        // Free
+        free(loss);
+        free(out_tensor);
+    }
+    
+    PrintTensor(layer);
+
+    FreeTensor(in_tensor);
+    FreeTensor(layer);
+    FreeTensor(gt_tensor);
+    return 0;
+}
+```
+
+Check `example` for more information.
+
+## Introduction
+
+### Tensor
 
 The core data structure in ToyML is the **Tensor**, which is implemented as a flat array of `double` numbers. The interpretation of this data is determined by two key properties:
 
@@ -15,7 +67,7 @@ The core data structure in ToyML is the **Tensor**, which is implemented as a fl
 
 For instance, the tensor `[1, 2, 3, 4, 5, 6]` can be interpreted as a 2\*3 matrix or a 2\*1\*3 tensor.
 
-## Backpropagation
+### Backpropagation
 
 In ToyML, backpropagation refers only to the process that computes the gradients, not how the gradients are used.
 
@@ -25,6 +77,7 @@ In ToyML, backpropagation refers only to the process that computes the gradients
 - [x] Optimizer
 - [ ] Built-in Networks
 - [ ] Tokenizers
+- [ ] Save and load weights
 
 ## Contribution
 
