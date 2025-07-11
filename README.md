@@ -95,9 +95,9 @@ In ToyML, backpropagation refers only to the process that computes the gradients
 
 - [x] Backpropagation
 - [x] Optimizer
+- [x] Save and load weights
 - [ ] Built-in Networks
 - [ ] Tokenizers
-- [ ] Save and load weights
 
 ## Contribution
 
