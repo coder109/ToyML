@@ -36,6 +36,7 @@ Tensor* CreateZeroTensor(int n_dim, int* shape_elem) {
     tensor->n_dim = n_dim;
     tensor->shape = shape;
     tensor->fn_id = OP_UNDEFINED;
+    tensor->n_prev = 0;
     return tensor;
 }
 
