@@ -21,6 +21,4 @@ void HadamardProductBackprop(Tensor* tensor);
 
 void ReLUBackprop(Tensor* tensor);
 
-void SoftmaxBackprop(Tensor* tensor);
-
 #endif
