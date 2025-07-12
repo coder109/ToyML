@@ -91,6 +91,23 @@ For instance, the tensor `[1, 2, 3, 4, 5, 6]` can be interpreted as a 2\*3 matri
 
 In ToyML, backpropagation refers only to the process that computes the gradients, not how the gradients are used.
 
+Support:
+
+- Add/Sub/HadamardProduct/Matmul
+- Sigmoid/ReLU
+- MSE
+
+
+### Optimization
+
+In ToyML, optimization refers to the parameter update process that occurs after gradient computation during backpropagation.
+
+Support:
+
+- SGD
+- SGD with momentum
+- Adam
+
 ## TODO
 
 - [x] Backpropagation
