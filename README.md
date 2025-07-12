@@ -113,8 +113,11 @@ Support:
 - [x] Backpropagation
 - [x] Optimizer
 - [x] Save and load weights
-- [ ] Built-in Networks
-- [ ] Tokenizers
+- [ ] Networks
+    - [ ] CNN
+    - [ ] GNN
+    - [ ] Tokenizers
+    - [ ] Transformer
 
 ## Contribution
 
