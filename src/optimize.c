@@ -91,10 +91,10 @@ bool AdamOptimize(AdamState* state, double learning_rate, double beta1, double b
 
     for(int i = 0; i < data_num; i++) {
         state->tensor->data[i] -= learning_rate * new_m->data[i] / (sqrt(new_v->data[i]) + 1e-8);
-        
     }
+    FreeTensor(new_m);
+    FreeTensor(new_v);
     return CheckNAN(state->tensor);
-    
 }
 
 void ZeroGradTensor(Tensor* tensor) {

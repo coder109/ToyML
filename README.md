@@ -8,9 +8,20 @@ ToyML draws inspiration from PyTorch's design philosophy and tensor operations. 
 
 ⚠️ **Note:** This is not a production-ready library. Use it for learning and experimentation only.
 
-## How to use?
+## Project layout
 
-On Windows, use the following command to build:
+```
+ToyML/
+├── include/          # Public headers (tensor, active_fn, loss_fn, backprop, optimize, file, macro_code)
+├── src/              # Implementation
+├── example/          # Example program (e.g. multiplicator.c)
+├── CMakeLists.txt
+└── test.c            # Test/demo (default main)
+```
+
+## Build
+
+On Windows (MinGW):
 
 ```bash
 mkdir build
@@ -19,7 +30,7 @@ cmake .. -G “MinGW Makefiles”
 make
 ```
 
-On Linux:
+On Linux / macOS:
 
 ```bash
 mkdir build
@@ -28,7 +39,9 @@ cmake ..
 make
 ```
 
-A simple example is presented below:
+The default target runs `test.c`. See `example/` for a separate sample; you may need to add it to `CMakeLists.txt` to build it.
+
+## How to use
 
 ```C
 #include "include/tensor.h"
@@ -60,9 +73,9 @@ int main(int argc, char* argv[]) {
         // Clear the previous gradients.
         ZeroGradTensor(layer);
         
-        // Free
-        free(loss);
-        free(out_tensor);
+        // Free intermediate tensors (use FreeTensor, not free)
+        FreeTensor(loss);
+        FreeTensor(out_tensor);
     }
     
     PrintTensor(layer);
@@ -74,7 +87,7 @@ int main(int argc, char* argv[]) {
 }
 ```
 
-Check `example` for more information.
+See the `example/` directory for more.
 
 ## Introduction
 
@@ -89,13 +102,13 @@ For instance, the tensor `[1, 2, 3, 4, 5, 6]` can be interpreted as a 2\*3 matri
 
 ### Backpropagation
 
-In ToyML, backpropagation refers only to the process that computes the gradients, not how the gradients are used.
+In ToyML, backpropagation is the process that computes gradients along the computation graph (via `Backprop(loss)`). It does not perform the parameter update; that is done by the optimizers.
 
-Support:
+Supported ops:
 
-- Add/Sub/HadamardProduct/Matmul
-- Sigmoid/ReLU
-- MSE
+- Add / Sub / HadamardProduct / MatMul
+- Sigmoid / Softmax / ReLU
+- MSE (loss)
 
 
 ### Optimization

@@ -48,13 +48,23 @@ bool SaveTensor(Tensor* tensor, const char* file_name) {
 }
 
 Tensor* LoadTensor(const char* line) {
-    int n_dim = String2Int(strtok(line, " "));
+    /* strtok modifies the buffer; copy to mutable memory so const input is not violated */
+    size_t len = strlen(line) + 1;
+    char* buf = (char*)malloc(len);
+    if(buf == NULL) {
+        perror("LoadTensor buffer malloc");
+        exit(EXIT_MALLOC_FAILURE);
+    }
+    strcpy(buf, line);
+
+    int n_dim = String2Int(strtok(buf, " "));
     int* shape = (int*)malloc(sizeof(int) * n_dim);
     if(shape == NULL) {
         perror("Shape malloc");
+        free(buf);
         exit(EXIT_MALLOC_FAILURE);
     }
-    
+
     for(int i = 0; i < n_dim; i++) {
         shape[i] = String2Int(strtok(NULL, " "));
     }
@@ -69,6 +79,7 @@ Tensor* LoadTensor(const char* line) {
     for(int i = 0; i < data_num; i++) {
         grad[i] = String2Double(strtok(NULL, " "));
     }
+    free(buf);
     return tensor;
 }
 

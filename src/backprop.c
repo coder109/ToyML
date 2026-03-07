@@ -21,6 +21,12 @@ int Backprop(Tensor* tensor) {
         case OP_HADAMARD:
             HadamardProductBackprop(tensor);
             break;
+        case OP_RELU:
+            ReLUBackprop(tensor);
+            break;
+        case OP_SOFTMAX:
+            SoftmaxBackprop(tensor);
+            break;
         case OP_UNDEFINED:
             break;
         default:
@@ -100,5 +106,17 @@ void HadamardProductBackprop(Tensor* tensor) {
 void ReLUBackprop(Tensor* tensor) {
     for(int i = 0; i < GetDataNum(tensor); i++) {
         tensor->prev[0]->grad[i] = tensor->grad[i] * (tensor->prev[0]->data[i] > 0 ? 1 : 0);
+    }
+}
+
+void SoftmaxBackprop(Tensor* tensor) {
+    /* d(softmax)/dx: y_i = exp(x_i)/sum(exp(x_j)); dy_i/dx = y_i*(delta_ij - y_j); dL/dx_i = y_i*(dL/dy_i - sum_j(dL/dy_j*y_j)) */
+    int n = GetDataNum(tensor);
+    double sum_grad_y = 0.0;
+    for(int i = 0; i < n; i++) {
+        sum_grad_y += tensor->grad[i] * tensor->data[i];
+    }
+    for(int i = 0; i < n; i++) {
+        tensor->prev[0]->grad[i] = tensor->data[i] * (tensor->grad[i] - sum_grad_y);
     }
 }

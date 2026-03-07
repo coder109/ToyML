@@ -111,6 +111,7 @@ Tensor* AddTensor(Tensor* tensor1, Tensor* tensor2) {
     result->prev[0] = tensor1;
     result->prev[1] = tensor2;
     result->fn_id = OP_ADD;
+    return result;
 }
 
 bool AddTensorInPlace(Tensor* tensor1, Tensor* tensor2) {
@@ -122,6 +123,7 @@ bool AddTensorInPlace(Tensor* tensor1, Tensor* tensor2) {
     for(int i = 0; i < data_num; i++) {
         tensor1->data[i] += tensor2->data[i];
     }
+    return true;
 }
 
 Tensor* SubTensor(Tensor* tensor1, Tensor* tensor2) {
@@ -143,7 +145,8 @@ Tensor* SubTensor(Tensor* tensor1, Tensor* tensor2) {
     }
     result->prev[0] = tensor1;
     result->prev[1] = tensor2;
-    result->fn_id = OP_ADD;
+    result->fn_id = OP_SUB;
+    return result;
 }
 
 bool SubTensorInPlace(Tensor* tensor1, Tensor* tensor2) {
@@ -155,6 +158,7 @@ bool SubTensorInPlace(Tensor* tensor1, Tensor* tensor2) {
     for(int i = 0; i < data_num; i++) {
         tensor1->data[i] -= tensor2->data[i];
     }
+    return true;
 }
 
 Tensor* HadamardProduct(Tensor* tensor1, Tensor* tensor2) {
@@ -177,6 +181,7 @@ Tensor* HadamardProduct(Tensor* tensor1, Tensor* tensor2) {
     result->prev[0] = tensor1;
     result->prev[1] = tensor2;
     result->fn_id = OP_HADAMARD;
+    return result;
 }
 
 bool isMatrix(Tensor* tensor) {
@@ -281,7 +286,17 @@ bool IsSameShape(Tensor* tensor1, Tensor* tensor2) {
 }
 
 void FreeTensor(Tensor* tensor) {
-    free(tensor->data);
-    free(tensor->shape);
+    if(tensor->data != NULL) {
+        free(tensor->data);
+    }
+    if(tensor->shape != NULL) {
+        free(tensor->shape);
+    }
+    if(tensor->grad != NULL) {
+        free(tensor->grad);
+    }
+    if(tensor->prev != NULL) {
+        free(tensor->prev);
+    }
     free(tensor);
 }
