@@ -25,8 +25,8 @@ int main(int argc, char* argv[]) {
 
         ZeroGradTensor(layer);
         
-        free(loss);
-        free(out_tensor);
+        FreeTensor(loss);
+        FreeTensor(out_tensor);
     }
     
     PrintTensor(layer);

@@ -2,32 +2,37 @@
 
 char* Tensor2String(Tensor* tensor) {
     // FORMAT: n_dim shape data grad
-    int tensor_size = sizeof(int) + sizeof(char) + (sizeof(char) + sizeof(int)) * tensor->n_dim + GetDataNum(tensor) * (sizeof(double) + sizeof(char)) * 2 + 1;
+    int data_num = GetDataNum(tensor);
+    size_t tensor_size = 0;
+
+    tensor_size += (size_t)snprintf(NULL, 0, "%d ", tensor->n_dim);
+    for(int i = 0; i < tensor->n_dim; i++) {
+        tensor_size += (size_t)snprintf(NULL, 0, "%d ", tensor->shape[i]);
+    }
+    for(int i = 0; i < data_num; i++) {
+        tensor_size += (size_t)snprintf(NULL, 0, "%.17g ", tensor->data[i]);
+    }
+    for(int i = 0; i < data_num; i++) {
+        tensor_size += (size_t)snprintf(NULL, 0, "%.17g ", tensor->grad[i]);
+    }
+    tensor_size += 1;
+
     char* tensor_str = (char*)calloc(tensor_size, sizeof(char));
     if(tensor_str == NULL) {
         perror("Tensor str malloc");
         exit(EXIT_MALLOC_FAILURE);
     }
 
-    int offset = 0;
-    char divide_char = ' ';
-
-    offset += sprintf(tensor_str + offset, "%d", tensor->n_dim); 
-
-    offset += sprintf(tensor_str + offset, "%c", divide_char);
-
+    size_t offset = 0;
+    offset += (size_t)snprintf(tensor_str + offset, tensor_size - offset, "%d ", tensor->n_dim);
     for(int i = 0; i < tensor->n_dim; i++) {
-        offset += sprintf(tensor_str + offset, "%d", tensor->shape[i]); 
-
-        offset += sprintf(tensor_str + offset, "%c", divide_char);
+        offset += (size_t)snprintf(tensor_str + offset, tensor_size - offset, "%d ", tensor->shape[i]);
     }
-    for(int i = 0; i < GetDataNum(tensor); i++) {
-        offset += sprintf(tensor_str + offset, "%lf", tensor->data[i]); 
-        offset += sprintf(tensor_str + offset, "%c", divide_char);
+    for(int i = 0; i < data_num; i++) {
+        offset += (size_t)snprintf(tensor_str + offset, tensor_size - offset, "%.17g ", tensor->data[i]);
     }
-    for(int i = 0; i < GetDataNum(tensor); i++) {
-        offset += sprintf(tensor_str + offset, "%lf", tensor->grad[i]); 
-        offset += sprintf(tensor_str + offset, "%c", divide_char);
+    for(int i = 0; i < data_num; i++) {
+        offset += (size_t)snprintf(tensor_str + offset, tensor_size - offset, "%.17g ", tensor->grad[i]);
     }
 
     return tensor_str;
@@ -57,7 +62,12 @@ Tensor* LoadTensor(const char* line) {
     }
     strcpy(buf, line);
 
-    int n_dim = String2Int(strtok(buf, " "));
+    char* token = strtok(buf, " ");
+    if(token == NULL) {
+        free(buf);
+        return NULL;
+    }
+    int n_dim = String2Int(token);
     int* shape = (int*)malloc(sizeof(int) * n_dim);
     if(shape == NULL) {
         perror("Shape malloc");
@@ -66,7 +76,13 @@ Tensor* LoadTensor(const char* line) {
     }
 
     for(int i = 0; i < n_dim; i++) {
-        shape[i] = String2Int(strtok(NULL, " "));
+        token = strtok(NULL, " ");
+        if(token == NULL) {
+            free(shape);
+            free(buf);
+            return NULL;
+        }
+        shape[i] = String2Int(token);
     }
     Tensor* tensor = CreateZeroTensor(n_dim, shape);
     free(shape);
@@ -74,54 +90,52 @@ Tensor* LoadTensor(const char* line) {
     double* data = tensor->data;
     double* grad = tensor->grad;
     for(int i = 0; i < data_num; i++) {
-        data[i] = String2Double(strtok(NULL, " "));
+        token = strtok(NULL, " ");
+        if(token == NULL) {
+            FreeTensor(tensor);
+            free(buf);
+            return NULL;
+        }
+        data[i] = String2Double(token);
     }
     for(int i = 0; i < data_num; i++) {
-        grad[i] = String2Double(strtok(NULL, " "));
+        token = strtok(NULL, " ");
+        if(token == NULL) {
+            FreeTensor(tensor);
+            free(buf);
+            return NULL;
+        }
+        grad[i] = String2Double(token);
     }
     free(buf);
     return tensor;
 }
 
 int String2Int(const char* str) {
+    int sign = 1;
     int num = 0;
-    for(int i = 0; i < strlen(str); i++) {
-        num *= 10;
-        num += str[i] - '0';
-    }
-    return num;
-}
+    int start_idx = 0;
 
-static double String2Double_NoExpo(const char* str) {
-    double num = 0;
-    double dot_number = 0;
-    int dot_number_length = 0;
-    bool dot_mode = false;
-    for(int i = 0; i < strlen(str); i++) {
-        if(str[i] == '.') {
-            dot_mode = true;
-            continue;
-        }
-        if(str[i] == ' ' || str[i] == '\n') {
-            continue;
-        }
-        if(dot_mode) {
-            dot_number *= 10.;
-            dot_number += str[i] - '0';
-            dot_number_length++;
-        } else {
-            num *= 10.;
-            num += str[i] - '0';
-        }
+    if(str == NULL || str[0] == '\0') {
+        return 0;
     }
-    num += dot_number / (double)pow(10, dot_number_length);
-    return num;
+    if(str[0] == '-') {
+        sign = -1;
+        start_idx = 1;
+    }
+
+    for(int i = start_idx; str[i] != '\0'; i++) {
+        if(str[i] < '0' || str[i] > '9') {
+            break;
+        }
+        num = num * 10 + (str[i] - '0');
+    }
+    return sign * num;
 }
 
 double String2Double(const char* str) {
-    if(str[0] == '-') {
-        return -String2Double_NoExpo(str + 1);
-    } else {
-        return String2Double_NoExpo(str);
+    if(str == NULL) {
+        return 0.0;
     }
+    return strtod(str, NULL);
 }

@@ -69,31 +69,15 @@ bool SGDMomentumOptimize(SGDMomentumState* state, double learning_rate, double m
 
 bool AdamOptimize(AdamState* state, double learning_rate, double beta1, double beta2) {
     state->time_step++;
-
-    Tensor* new_m = CreateZeroTensor(state->tensor->n_dim, state->tensor->shape);
-    Tensor* new_v = CreateZeroTensor(state->tensor->n_dim, state->tensor->shape);
-
     int data_num = GetDataNum(state->tensor);
     for(int i = 0; i < data_num; i++) {
-        new_m->data[i] = beta1 * state->m[i] + (1 - beta1) * state->tensor->grad[i];
-        new_v->data[i] = beta2 * state->v[i] + (1 - beta2) * state->tensor->grad[i] * state->tensor->grad[i];
-    }
+        state->m[i] = beta1 * state->m[i] + (1 - beta1) * state->tensor->grad[i];
+        state->v[i] = beta2 * state->v[i] + (1 - beta2) * state->tensor->grad[i] * state->tensor->grad[i];
 
-    for(int i = 0; i < data_num; i++) {
-        state->m[i] = new_m->data[i];
-        state->v[i] = new_v->data[i];
+        double m_hat = state->m[i] / (1 - pow(beta1, state->time_step));
+        double v_hat = state->v[i] / (1 - pow(beta2, state->time_step));
+        state->tensor->data[i] -= learning_rate * m_hat / (sqrt(v_hat) + 1e-8);
     }
-
-    for(int i = 0; i < data_num; i++) {
-        new_m->data[i] /= (1 - pow(beta1, state->time_step + 1));
-        new_v->data[i] /= (1 - pow(beta2, state->time_step + 1));
-    }
-
-    for(int i = 0; i < data_num; i++) {
-        state->tensor->data[i] -= learning_rate * new_m->data[i] / (sqrt(new_v->data[i]) + 1e-8);
-    }
-    FreeTensor(new_m);
-    FreeTensor(new_v);
     return CheckNAN(state->tensor);
 }
 

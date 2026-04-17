@@ -41,7 +41,7 @@ int Backprop(Tensor* tensor) {
 
 void SigmoidBackprop(Tensor* tensor) {
     for(int i = 0; i < GetDataNum(tensor); i++) {
-        tensor->prev[0]->grad[i] = tensor->grad[i] * tensor->data[i] * (1 - tensor->data[i]);
+        tensor->prev[0]->grad[i] += tensor->grad[i] * tensor->data[i] * (1 - tensor->data[i]);
     }
 }
 
@@ -56,7 +56,7 @@ void MatmulBackprop(Tensor* tensor) {
                 double curr_elem = tensor->prev[1]->data[GetElemIdxBasedOnRowCol(tensor->prev[1], elem_col, col)];
                 grad_sum += tensor_grad * curr_elem;
             }
-            tensor->prev[0]->grad[GetElemIdxBasedOnRowCol(tensor->prev[0], elem_row, elem_col)] = grad_sum;
+            tensor->prev[0]->grad[GetElemIdxBasedOnRowCol(tensor->prev[0], elem_row, elem_col)] += grad_sum;
         }
     }
 
@@ -69,7 +69,7 @@ void MatmulBackprop(Tensor* tensor) {
                 double curr_elem = tensor->prev[0]->data[GetElemIdxBasedOnRowCol(tensor->prev[0], row, elem_row)];
                 grad_sum += tensor_grad * curr_elem;
             }
-            tensor->prev[1]->grad[GetElemIdxBasedOnRowCol(tensor->prev[1], elem_row, elem_col)] = grad_sum;
+            tensor->prev[1]->grad[GetElemIdxBasedOnRowCol(tensor->prev[1], elem_row, elem_col)] += grad_sum;
         }
     }
 
@@ -78,34 +78,36 @@ void MatmulBackprop(Tensor* tensor) {
 void MSEBackprop(Tensor* loss) {
     for(int i = 0; i < GetDataNum(loss->prev[0]); i++) {
         double diff = loss->prev[0]->data[i] - loss->prev[1]->data[i];
-        loss->prev[0]->grad[i] = diff * 2 / GetDataNum(loss->prev[0]);
+        double grad = diff * 2 / GetDataNum(loss->prev[0]);
+        loss->prev[0]->grad[i] += grad;
+        loss->prev[1]->grad[i] -= grad;
     }
 }
 
 void AddBackprop(Tensor* tensor) {
     for(int i = 0; i < GetDataNum(tensor); i++) {
-        tensor->prev[0]->grad[i] = tensor->grad[i];
-        tensor->prev[1]->grad[i] = tensor->grad[i];
+        tensor->prev[0]->grad[i] += tensor->grad[i];
+        tensor->prev[1]->grad[i] += tensor->grad[i];
     }
 }
 
 void SubBackprop(Tensor* tensor) {
     for(int i = 0; i < GetDataNum(tensor); i++) {
-        tensor->prev[0]->grad[i] = tensor->grad[i];
-        tensor->prev[1]->grad[i] = -tensor->grad[i];
+        tensor->prev[0]->grad[i] += tensor->grad[i];
+        tensor->prev[1]->grad[i] -= tensor->grad[i];
     }
 }
 
 void HadamardProductBackprop(Tensor* tensor) {
     for(int i = 0; i < GetDataNum(tensor); i++) {
-        tensor->prev[0]->grad[i] = tensor->grad[i] * tensor->prev[1]->data[i];
-        tensor->prev[1]->grad[i] = tensor->grad[i] * tensor->prev[0]->data[i];
+        tensor->prev[0]->grad[i] += tensor->grad[i] * tensor->prev[1]->data[i];
+        tensor->prev[1]->grad[i] += tensor->grad[i] * tensor->prev[0]->data[i];
     }
 }
 
 void ReLUBackprop(Tensor* tensor) {
     for(int i = 0; i < GetDataNum(tensor); i++) {
-        tensor->prev[0]->grad[i] = tensor->grad[i] * (tensor->prev[0]->data[i] > 0 ? 1 : 0);
+        tensor->prev[0]->grad[i] += tensor->grad[i] * (tensor->prev[0]->data[i] > 0 ? 1 : 0);
     }
 }
 
@@ -117,6 +119,6 @@ void SoftmaxBackprop(Tensor* tensor) {
         sum_grad_y += tensor->grad[i] * tensor->data[i];
     }
     for(int i = 0; i < n; i++) {
-        tensor->prev[0]->grad[i] = tensor->data[i] * (tensor->grad[i] - sum_grad_y);
+        tensor->prev[0]->grad[i] += tensor->data[i] * (tensor->grad[i] - sum_grad_y);
     }
 }

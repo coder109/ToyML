@@ -37,6 +37,7 @@ Tensor* CreateZeroTensor(int n_dim, int* shape_elem) {
     tensor->shape = shape;
     tensor->fn_id = OP_UNDEFINED;
     tensor->n_prev = 0;
+    tensor->prev = NULL;
     return tensor;
 }
 
@@ -286,6 +287,9 @@ bool IsSameShape(Tensor* tensor1, Tensor* tensor2) {
 }
 
 void FreeTensor(Tensor* tensor) {
+    if(tensor == NULL) {
+        return;
+    }
     if(tensor->data != NULL) {
         free(tensor->data);
     }
